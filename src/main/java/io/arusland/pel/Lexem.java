@@ -1,5 +1,6 @@
 package io.arusland.pel;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import io.arusland.pel.LexemType;
@@ -10,7 +11,7 @@ public class Lexem {
 	private final LexemType type;
 
 	public Lexem(LexemType type, String value) {
-		this(type, value, "");
+		this(type, value, StringUtils.EMPTY);
 	}
 
 	public Lexem(LexemType type, String value, String name) {
@@ -32,7 +33,7 @@ public class Lexem {
 	}
 
 	public String expressionValue() {
-		if (name == null || name.isEmpty()) {
+		if (StringUtils.isBlank(name)) {
 			return value;
 		} else {
 			return String.format("%s:%s", name, value);
@@ -49,7 +50,7 @@ public class Lexem {
 
 	@Override
 	public String toString() {
-		if (name == null || name.isEmpty()) {
+		if (StringUtils.isBlank(name)) {
 			return String.format("%s - %s", type.toString(), value);
 		} else {
 			return String.format("%s - %s:%s", type.toString(), name, value);
