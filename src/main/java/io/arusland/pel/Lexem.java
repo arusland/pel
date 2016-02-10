@@ -1,5 +1,7 @@
 package io.arusland.pel;
 
+import org.apache.commons.lang3.Validate;
+
 import io.arusland.pel.LexemType;
 
 public class Lexem {
@@ -12,9 +14,9 @@ public class Lexem {
 	}
 
 	public Lexem(LexemType type, String value, String name) {
-		this.type = type;
-		this.value = value;
-		this.name = name;
+		this.type = Validate.notNull(type, "type");
+		this.value = Validate.notBlank(value, "value");
+		this.name = Validate.notNull(name, "name");
 	}
 
 	public String getValue() {

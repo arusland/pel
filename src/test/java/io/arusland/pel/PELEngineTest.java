@@ -55,7 +55,7 @@ public class PELEngineTest {
 	@Test
 	public void testFailed1() {
 		exception.expect(IllegalStateException.class);
-		exception.expectMessage("Invalid operator using: !");
+		exception.expectMessage("Operator cannot be last in expression: !");
 
 		String input = "role:authorized!";
 
@@ -71,7 +71,7 @@ public class PELEngineTest {
 
 		PELEngine.parse(input);
 	}
-	
+
 	@Test
 	public void testFailed3() {
 		exception.expect(IllegalStateException.class);
@@ -81,7 +81,7 @@ public class PELEngineTest {
 
 		PELEngine.parse(input);
 	}
-	
+
 	@Test
 	public void testFailed4() {
 		exception.expect(IllegalStateException.class);
@@ -91,7 +91,7 @@ public class PELEngineTest {
 
 		PELEngine.parse(input);
 	}
-	
+
 	@Test
 	public void testFailed5() {
 		exception.expect(IllegalStateException.class);
@@ -101,13 +101,33 @@ public class PELEngineTest {
 
 		PELEngine.parse(input);
 	}
-	
+
 	@Test
 	public void testFailed6() {
 		exception.expect(IllegalStateException.class);
 		exception.expectMessage("Invalid operator using: &&");
 
 		String input = "!&&role:authorized";
+
+		PELEngine.parse(input);
+	}
+
+	@Test
+	public void testFailed7() {
+		exception.expect(IllegalStateException.class);
+		exception.expectMessage("Operator cannot be last in expression: !");
+
+		String input = "!";
+
+		PELEngine.parse(input);
+	}
+	
+	@Test
+	public void testFailed8() {
+		exception.expect(IllegalStateException.class);
+		exception.expectMessage("Operator cannot be last in expression: &&");
+
+		String input = "role:authorized&&";
 
 		PELEngine.parse(input);
 	}

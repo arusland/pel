@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+
 /**
  * Profile Expression Language Engine
  *
@@ -15,7 +18,7 @@ public class PELEngine {
 	private final List<Lexem> lexems;
 
 	private PELEngine(List<Lexem> lexems) {
-		this.lexems = lexems;
+		this.lexems = Validate.notNull(lexems);
 	}
 
 	/**
@@ -24,7 +27,9 @@ public class PELEngine {
 	 * @return Java expression
 	 */
 	public String generateExpression(final Replacer replacer) {
-		StringBuilder result = new StringBuilder();
+		Validate.notNull(replacer);
+		
+		final StringBuilder result = new StringBuilder();
 		Lexem prevLexem = null;
 
 		for (Lexem lexem : lexems) {
@@ -170,9 +175,11 @@ public class PELEngine {
 
 				prevLexem = lexem;
 			}
+			
+			Lexem lastLexem = lexems.get(lexems.size() - 1);
 
-			if (lexems.get(lexems.size() - 1).equalsValue("!")) {
-				throw new IllegalStateException("Invalid operator using: !");
+			if (lastLexem.isOperator()) {
+				throw new IllegalStateException("Operator cannot be last in expression: " + lastLexem.getValue());
 			}
 		}
 
@@ -220,9 +227,7 @@ public class PELEngine {
 	}
 
 	private static void validateInput(String input) {
-		input = input != null ? input.trim() : "";
-
-		if (input.isEmpty()) {
+		if (StringUtils.isBlank(input)) {
 			throw new IllegalStateException("Expression cannot be empty");
 		}
 
