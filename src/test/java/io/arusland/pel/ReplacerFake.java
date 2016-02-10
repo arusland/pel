@@ -1,7 +1,7 @@
 package io.arusland.pel;
 
-import io.arusland.pel.PELEvaluator.Lexem;
-import io.arusland.pel.PELEvaluator.Replacer;
+import io.arusland.pel.Lexem;
+import io.arusland.pel.Replacer;
 
 public class ReplacerFake implements Replacer {
 	@Override

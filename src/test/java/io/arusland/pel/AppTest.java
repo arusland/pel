@@ -18,7 +18,7 @@ public class AppTest extends TestCase {
 	public void testNormal1() {
 		String input = "role:authorized";
 
-		PELEvaluator eval = PELEvaluator.parse(input);
+		PELEngine eval = PELEngine.parse(input);
 
 		String expression = eval.generateExpression(replacerFake);
 
@@ -28,7 +28,7 @@ public class AppTest extends TestCase {
 	public void testNormal2() {
 		String input = "role:authorized&&platform:android";
 
-		PELEvaluator eval = PELEvaluator.parse(input);
+		PELEngine eval = PELEngine.parse(input);
 
 		String expression = eval.generateExpression(replacerFake);
 
@@ -39,7 +39,7 @@ public class AppTest extends TestCase {
 	public void testNormal10() {
 		String input = "!!(role:authorized && !!(platform:android)) || !role:admins ||!!config:allowedit";
 
-		PELEvaluator eval = PELEvaluator.parse(input);
+		PELEngine eval = PELEngine.parse(input);
 
 		String expression = eval.generateExpression(replacerFake);
 

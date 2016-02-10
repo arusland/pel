@@ -6,18 +6,15 @@ import java.util.regex.Pattern;
 
 /**
  * Profile Expression Language Engine
- * 
- * Parse and evaluate expressions like
- * "!!(role:authorized && !!(platform:android)) || role:admins ||!!config:allowedit"
- * 
+ *
  * @author arusland
  *
  */
-public class PELEvaluator {
+public class PELEngine {
 	private final static Pattern NOTALLOWED_SYMBOLS = Pattern.compile("[^\\w:&|! \\(\\)]");
 	private final List<Lexem> lexems;
 
-	private PELEvaluator(List<Lexem> lexems) {
+	private PELEngine(List<Lexem> lexems) {
 		this.lexems = lexems;
 	}
 
@@ -50,14 +47,15 @@ public class PELEvaluator {
 		return result.toString();
 	}
 
-	public static PELEvaluator parse(String input) {
+	public static PELEngine parse(String input) {
 		List<Lexem> lexems = parseLexems(input);
 
-		/*for (int i = 0; i < lexems.size(); i++) {
-			System.out.println(lexems.get(i));
-		}*/
+		/*
+		 * for (int i = 0; i < lexems.size(); i++) {
+		 * System.out.println(lexems.get(i)); }
+		 */
 
-		return new PELEvaluator(lexems);
+		return new PELEngine(lexems);
 	}
 
 	/**
@@ -217,72 +215,5 @@ public class PELEvaluator {
 		input = input != null ? input.trim() : "";
 
 		return input.length() > 0 && !NOTALLOWED_SYMBOLS.matcher(input).matches();
-	}
-
-	public static class Lexem {
-		private final String value;
-		private final String name;
-		private final LexemType type;
-
-		public Lexem(LexemType type, String value) {
-			this(type, value, "");
-		}
-
-		public Lexem(LexemType type, String value, String name) {
-			this.type = type;
-			this.value = value;
-			this.name = name;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public LexemType getType() {
-			return type;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public String expressionValue() {
-			if (name == null || name.isEmpty()) {
-				return value;
-			} else {
-				return String.format("%s:%s", name, value);
-			}
-		}
-
-		public boolean isOperator() {
-			return getType() == LexemType.OPERATOR;
-		}
-
-		public boolean equalsValue(String value) {
-			return getValue().equals(value);
-		}
-
-		@Override
-		public String toString() {
-			if (name == null || name.isEmpty()) {
-				return String.format("%s - %s", type.toString(), value);
-			} else {
-				return String.format("%s - %s:%s", type.toString(), name, value);
-			}
-		}
-	}
-
-	public enum LexemType {
-		SYMBOL,
-
-		OPERATOR,
-
-		OPEN_BRACKET,
-
-		CLOSE_BRACKET
-	}
-
-	public interface Replacer {
-		String replace(Lexem lexem);
 	}
 }
