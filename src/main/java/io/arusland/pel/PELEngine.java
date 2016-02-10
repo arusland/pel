@@ -152,18 +152,28 @@ public class PELEngine {
 	 * 
 	 */
 	private static List<Lexem> validateLexems(List<Lexem> lexems) {
-		Lexem prevLexem = null;
+		if (!lexems.isEmpty()) {
+			Lexem prevLexem = null;
 
-		for (Lexem lexem : lexems) {
-			if (lexem.isOperator()) {
-				if (prevLexem != null) {
-					if (prevLexem.isOperator() && !prevLexem.equalsValue("!") && !lexem.equalsValue("!")) {
+			for (Lexem lexem : lexems) {
+				if (lexem.isOperator()) {
+					if (prevLexem != null) {
+						if (prevLexem.isOperator()) {
+							if (!lexem.equalsValue("!")) {
+								throw new IllegalStateException("Invalid operator using: " + lexem.getValue());
+							}
+						}
+					} else if (!lexem.equalsValue("!")) {
 						throw new IllegalStateException("Invalid operator using: " + lexem.getValue());
 					}
 				}
+
+				prevLexem = lexem;
 			}
 
-			prevLexem = lexem;
+			if (lexems.get(lexems.size() - 1).equalsValue("!")) {
+				throw new IllegalStateException("Invalid operator using: !");
+			}
 		}
 
 		return lexems;
@@ -175,9 +185,7 @@ public class PELEngine {
 	 * @return Token list.
 	 */
 	private static List<String> parseTokens(String input) {
-		if (!isValidInput(input)) {
-			throw new IllegalStateException("Exptression is invalid: " + input);
-		}
+		validateInput(input);
 
 		boolean tokenStarted = false;
 		List<String> tokens = new ArrayList<>();
@@ -211,9 +219,15 @@ public class PELEngine {
 		return tokens;
 	}
 
-	private static boolean isValidInput(String input) {
+	private static void validateInput(String input) {
 		input = input != null ? input.trim() : "";
 
-		return input.length() > 0 && !NOTALLOWED_SYMBOLS.matcher(input).matches();
+		if (input.isEmpty()) {
+			throw new IllegalStateException("Expression cannot be empty");
+		}
+
+		if (NOTALLOWED_SYMBOLS.matcher(input).matches()) {
+			throw new IllegalStateException("Expression is invalid: " + input);
+		}
 	}
 }
